@@ -35,6 +35,7 @@ jobs:
           docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
           docker tag flatbuffers $DOCKER_ORG/flatbuffers:gcc &&
           docker push $DOCKER_ORG/flatbuffers:gcc &&
+          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
           docker tag flatbuffers $DOCKER_ORG/flatbuffers:gcc-$YYYYMMDD &&
           docker push $DOCKER_ORG/flatbuffers:gcc-$YYYYMMDD &&
           docker tag flatbuffers $DOCKER_ORG/flatbuffers &&
@@ -47,6 +48,7 @@ jobs:
           docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
           docker tag flatbuffers-tag $DOCKER_ORG/flatbuffers:gcc-$TRAVIS_TAG &&
           docker push $DOCKER_ORG/flatbuffers:gcc-$TRAVIS_TAG &&
+          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
           docker tag flatbuffers-tag $DOCKER_ORG/flatbuffers:$TRAVIS_TAG &&
           docker push $DOCKER_ORG/flatbuffers:$TRAVIS_TAG ;
         fi
@@ -59,6 +61,7 @@ jobs:
           docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
           docker tag flatbuffers-clang $DOCKER_ORG/flatbuffers:clang &&
           docker push $DOCKER_ORG/flatbuffers:clang &&
+          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
           docker tag flatbuffers-clang $DOCKER_ORG/flatbuffers:clang-$YYYYMMDD &&
           docker push $DOCKER_ORG/flatbuffers:clang-$YYYYMMDD ;
         fi
