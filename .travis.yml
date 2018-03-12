@@ -1,0 +1,70 @@
+# docker-flatbuffers .travis.yml
+#
+# Builds docker-flatbuffers images on Travis CI
+#
+# https://travis-ci.org/neomantra/docker-flatbuffers
+#
+#
+# Master will build images with Docker tag:
+#   neomantra/flatbuffers   (gcc)
+#   neomantra/flatbuffers:gcc
+#   neomantra/flatbuffers:clang
+#   neomantra/flatbuffers-YYYYMMDD   (gcc)
+#   neomantra/flatbuffers:gcc-YYYYMMDD
+#   neomantra/flatbuffers:clang-YYYYMMDD
+#
+# Releases should be tagged in git as:
+#   neomantra/flatbuffers:<flatbuffers-version>  (gcc)
+#   neomantra/flatbuffers:gcc-<flatbuffers-version>
+#   neomantra/flatbuffers:clang-<flatbuffers-version>
+#
+
+sudo: required
+
+services:
+  - docker
+
+jobs:
+  include:
+
+    - stage: build docker image for gcc flavor
+      script:
+      - if [[ "$TRAVIS_BRANCH" == "master" ]] ; then
+          docker build -t flatbuffers . ;
+          YYYYMMDD=$(date +%Y%m%d) ;
+          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
+          docker tag flatbuffers $DOCKER_ORG/flatbuffers:gcc &&
+          docker push $DOCKER_ORG/flatbuffers:gcc &&
+          docker tag flatbuffers $DOCKER_ORG/flatbuffers:gcc-$YYYYMMDD &&
+          docker push $DOCKER_ORG/flatbuffers:gcc-$YYYYMMDD &&
+          docker tag flatbuffers $DOCKER_ORG/flatbuffers &&
+          docker push $DOCKER_ORG/flatbuffers &&
+          docker tag flatbuffers $DOCKER_ORG/flatbuffers:$YYYYMMDD &&
+          docker push $DOCKER_ORG/flatbuffers:$YYYYMMDD ;
+        fi
+      - if [[ "$TRAVIS_TAG" ]] ; then
+          docker build -t flatbuffers-tag --build-arg FLATBUFFERS_ARCHIVE_TAG=$TRAVIS_TAG . ;
+          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
+          docker tag flatbuffers-tag $DOCKER_ORG/flatbuffers:gcc-$TRAVIS_TAG &&
+          docker push $DOCKER_ORG/flatbuffers:gcc-$TRAVIS_TAG &&
+          docker tag flatbuffers-tag $DOCKER_ORG/flatbuffers:$TRAVIS_TAG &&
+          docker push $DOCKER_ORG/flatbuffers:$TRAVIS_TAG ;
+        fi
+
+    - stage: build docker image for clang flavor
+      script:
+      - if [[ "$TRAVIS_BRANCH" == "master" ]] ; then
+          docker build -t flatbuffers-clang --build-arg FLATBUFFERS_USE_CLANG="true" . ;
+          YYYYMMDD=$(date +%Y%m%d) ;
+          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
+          docker tag flatbuffers-clang $DOCKER_ORG/flatbuffers:clang &&
+          docker push $DOCKER_ORG/flatbuffers:clang &&
+          docker tag flatbuffers-clang $DOCKER_ORG/flatbuffers:clang-$YYYYMMDD &&
+          docker push $DOCKER_ORG/flatbuffers:clang-$YYYYMMDD ;
+        fi
+      - if [[ "$TRAVIS_TAG" ]] ; then
+          docker build -t flatbuffers-clang-tag --build-arg FLATBUFFERS_ARCHIVE_TAG=$TRAVIS_TAG --build-arg FLATBUFFERS_USE_CLANG="true" . ;
+          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
+          docker tag flatbuffers-clang-tag $DOCKER_ORG/flatbuffers:clang-$TRAVIS_TAG &&
+          docker push $DOCKER_ORG/flatbuffers:clang-$TRAVIS_TAG ;
+        fi
