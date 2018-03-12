@@ -2,14 +2,17 @@
 
 [![Build Status](https://travis-ci.org/neomantra/docker-flatbuffers.svg?branch=master)](https://travis-ci.org/neomantra/docker-flatbuffers)  [![](https://images.microbadger.com/badges/image/neomantra/flatbuffers.svg)](https://microbadger.com/#/images/neomantra/flatbuffers "microbadger.com")
 
-## Supported tags
+`docker-flatbuffers` is [Docker](https://www.docker.com) tooling for [FlatBuffers](https://google.github.io/flatbuffers/).
+
+Supported Tags
+==============
 
 Images are availble in both `gcc` and `clang` variants, representing which toolchain was FlatBuffers was built from.  The plain, undecorated tag name uses `gcc`.   "master" branches are tagged with YYYYMMDD of the image build dates.  Specific FlatBuffer releases are tagged with their version name.
 
-- neomantra/flatbuffers, neomantra/flatbuffers:gcc
-- neomantra/flatbuffers:clang
-- neomantra/flatbuffers:v1.8.0, neomantra/flatbuffers:gcc-v1.8.0
-- neomantra/flatbuffers:clang-v1.8.0
+- `gcc`, `latest`
+- `clang`
+- `gcc-v1.8.0`, `v1.8.0`
+- `clang-v1.8.0`
 
 The builds are managed by [Travis-CI](https://travis-ci.org/neomantra/docker-openresty).
 
@@ -19,21 +22,13 @@ For best stability, pin your images to the full tag, for example `neomantra/flat
 Table of Contents
 =================
 
-* [Description](#description)
+* [Supported Tags](#supported-tags)
 * [Usage As An Image Build Stage](#usage-as-an-image-build-stage)
 * [Usage As A Build Tool](#usage-as-a-build-tool)
 * [Files In This Image](#files-in-this-image)
 * [Customizing The Docker Image Build](#customizing-the-docker-image-build)
 * [Authors](#authors)
 * [Copyright & License](#copyright--license)
-
-
-Description
-===========
-
-`docker-flatbuffers` is [Docker](https://www.docker.com) tooling for [FlatBuffers](https://google.github.io/flatbuffers/).
-
-The builds are managed by [Travis-CI](https://travis-ci.org/neomantra/docker-flatbuffers).
 
 
 Usage As An Image Build Stage
