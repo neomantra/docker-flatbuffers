@@ -2,7 +2,8 @@
 
 [![Build Status](https://travis-ci.org/neomantra/docker-flatbuffers.svg?branch=master)](https://travis-ci.org/neomantra/docker-flatbuffers)  [![](https://images.microbadger.com/badges/image/neomantra/flatbuffers.svg)](https://microbadger.com/#/images/neomantra/flatbuffers "microbadger.com")
 
-`docker-flatbuffers` is [Docker](https://www.docker.com) tooling for [FlatBuffers](https://google.github.io/flatbuffers/).
+`docker-flatbuffers` is [Docker](https://www.docker.com) tooling for [FlatBuffers](https://google.github.io/flatbuffers/).  It also include C-language support using [`flatcc`](https://github.com/dvidelabs/flatcc).
+
 
 Supported Tags
 ==============
@@ -41,6 +42,11 @@ COPY --from=neomantra/flatbuffers /usr/local/bin/flatc /usr/local/bin/flatc
 COPY --from=neomantra/flatbuffers /usr/local/include/flatbuffers /usr/local/include/flatbuffers
 COPY --from=neomantra/flatbuffers /usr/local/lib/libflatbuffers.a /usr/local/lib/libflatbuffers.a
 COPY --from=neomantra/flatbuffers /usr/local/lib/cmake/flatbuffers /usr/local/lib/cmake/flatbuffers
+
+
+COPY --from=neomantra/flatbuffers /usr/local/bin/flatcc /usr/local/bin/flatcc
+COPY --from=neomantra/flatbuffers /usr/local/include/flatcc /usr/local/include/flatcc
+COPY --from=neomantra/flatbuffers /usr/local/lib/libflatcc.a /usr/local/lib/libflatccrt.a /usr/local/lib/
 ```
 
 
@@ -49,21 +55,21 @@ Usage As A Build Tool
 
 You can generate files on the host through volume bind mounts.  The idea is that you mount a source directory into the container, invoke `flatc` on a schema in it, and write the output to a mounted destination.
 
-The `ENTRYPOINT` for this image is `/usr/local/bin/flatc` so you just need to follow with arguments
-
 Example:
 
 ```
 # Input on host is in /my/src.
 # Output written to /my/dest.
-docker run -v /my/src:/src -v /my/dest:/dest neomantra/flatbuffers --cpp --scoped-enums -o /dest /src/monster.fbs 
+docker run -v /my/src:/src -v /my/dest:/dest neomantra/flatbuffers flatc --cpp --scoped-enums -o /dest /src/monster.fbs
 ```
 
 
 Files In This Image
 ===================
 
-This image is slim, containing the `debian-slim` [base image](https://hub.docker.com/_/debian/) and the build artifacts of FlatBuffers:
+This image is slim, containing the `debian-slim` [base image](https://hub.docker.com/_/debian/) and the build artifacts of FlatBuffers and flatcc:
+
+### FlatBuffers
 
 ```
 /usr/local/bin/flatc
@@ -97,6 +103,21 @@ This image is slim, containing the `debian-slim` [base image](https://hub.docker
 /usr/local/lib/cmake/flatbuffers/FlatcTargets-release.cmake
 ```
 
+### flatcc
+
+```
+# Compiler:
+/usr/local/bin/flatcc
+/usr/local/lib/lib/libflatcc.a
+/usr/local/include/flatcc/flatcc.h
+
+# Runtime:
+/usr/local/include/include/flatcc
+/usr/local/include/include/flatcc/reflection
+/usr/local/include/include/flatcc/support
+/usr/local/lib/libflatccrt.a
+```
+
 
 Customizing The Docker Image Build
 ===================================
@@ -107,9 +128,11 @@ The Docker image build can be customized using the following build arguments.  T
 | Arg | Default | Description |
 :----- | :-----: |:----------- |
 |FLATBUFFERS_ARCHIVE_BASE_URL | https://github.com/google/flatbuffers/archive | URL to download the flatbuffers archive from |
-|FLATBUFFERS_ARCHIVE_TAG | master | Tag to download |
+|FLATBUFFERS_ARCHIVE_TAG | master | FlatBuffers tag to download |
 |FLATBUFFERS_BUILD_TYPE | Release | CMake build type (e.g. Release, Debug) |
 |FLATBUFFERS_USE_CLANG | false | Set to exactly `"true"` to build with `clang` instead of `gcc` |
+|FLATCC_ARCHIVE_BASE_URL | https://github.com/dvidelabs/flatcc/archive/ | URL to download the flatcc archive from |
+|FLATCC_ARCHIVE_TAG | master | flatcc tag to download |
 
 
 Authors

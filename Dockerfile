@@ -1,6 +1,10 @@
 # Flatbuffers Dockerfile
 # https://github.com/neomantra/docker-flatbuffers
 
+###############################################################################
+# FlatBuffer Build
+###############################################################################
+
 FROM debian:stretch-slim as flatbuffer_build
 
 ARG FLATBUFFERS_ARCHIVE_BASE_URL="https://github.com/google/flatbuffers/archive"
@@ -62,6 +66,41 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
 #
 
 
+###############################################################################
+# flatcc Build
+###############################################################################
+
+# Same build environment as FlatBuffer
+
+ARG FLATCC_ARCHIVE_BASE_URL="https://github.com/dvidelabs/flatcc/archive/"
+ARG FLATCC_ARCHIVE_TAG="master"
+
+RUN curl -fSL "${FLATCC_ARCHIVE_BASE_URL}/${FLATCC_ARCHIVE_TAG}.tar.gz" -o flatcc.tar.gz \
+    && tar xzf flatcc.tar.gz \
+    && mv flatcc-* flatcc \
+    && cd flatcc \
+    && env $( if [ "${FLATBUFFERS_USE_CLANG}" = "true" ] ; then echo "CC=/usr/bin/clang CXX=/usr/bin/clang++ " ; fi) \
+        ./scripts/initbuild.sh make \
+    && env $( if [ "${FLATBUFFERS_USE_CLANG}" = "true" ] ; then echo "CC=/usr/bin/clang CXX=/usr/bin/clang++ " ; fi) \
+       ./scripts/build.sh
+
+
+# Build artifacts:
+# Compiler:
+#   bin/flatcc                 (command line interface to schema compiler)
+#   lib/libflatcc.a            (optional, for linking with schema compiler)
+#   include/flatcc/flatcc.h    (optional, header and doc for libflatcc.a)
+# Runtime:
+#   include/flatcc/**          (runtime header files)
+#   include/flatcc/reflection  (optional)
+#   include/flatcc/support     (optional, only used for test and samples)
+#   lib/libflatccrt.a          (runtime library)
+
+
+###############################################################################
+# Final Image Composition
+###############################################################################
+
 FROM debian:stretch-slim
 
 COPY --from=flatbuffer_build /usr/local/bin/flatc /usr/local/bin/flatc
@@ -69,9 +108,14 @@ COPY --from=flatbuffer_build /usr/local/include/flatbuffers /usr/local/include/f
 COPY --from=flatbuffer_build /usr/local/lib/libflatbuffers.a /usr/local/lib/libflatbuffers.a
 COPY --from=flatbuffer_build /usr/local/lib/cmake/flatbuffers /usr/local/lib/cmake/flatbuffers
 
+COPY --from=flatbuffer_build /flatcc/bin/flatcc /usr/local/bin/flatcc
+COPY --from=flatbuffer_build /flatcc/include/flatcc /usr/local/include/flatcc
+COPY --from=flatbuffer_build /flatcc/lib/*.a /usr/local/lib/
+
+
 LABEL maintainer="Evan Wies <evan@neomantra.net>"
 LABEL FLATBUFFERS_ARCHIVE_BASE_URL="${FLATBUFFERS_ARCHIVE_BASE_URL}"
 LABEL FLATBUFFERS_ARCHIVE_TAG="${FLATBUFFERS_ARCHIVE_TAG}"
 LABEL FLATBUFFERS_BUILD_TYPE="${FLATBUFFERS_BUILD_TYPE}"
-
-ENTRYPOINT [ "/usr/local/bin/flatc" ]
+LABEL FLATCC_ARCHIVE_BASE_URL="${FLATCC_ARCHIVE_BASE_URL}"
+LABEL FLATCC_ARCHIVE_TAG="${FLATCC_ARCHIVE_TAG}"
