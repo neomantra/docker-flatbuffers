@@ -4,20 +4,29 @@
 
 `docker-flatbuffers` is [Docker](https://www.docker.com) tooling for [FlatBuffers](https://google.github.io/flatbuffers/).  It also include C-language support using [`flatcc`](https://github.com/dvidelabs/flatcc).
 
+Rather than building your own FlatBuffers installation, you can run `flatc` or `flatcc` in a container and ["bind mount"](https://docs.docker.com/storage/bind-mounts/) your input and output directories (see [Usage As a Build Tool](#usage-as-a-build-tool)):
+
+```
+docker run -v /proj/src:/src -v /proj/dest:/dest neomantra/flatbuffers flatc --cpp --js --ruby -o /dest /src/monster.fbs
+```
+
 
 Supported Tags
 ==============
 
-Images are availble in both `gcc` and `clang` variants, representing which toolchain was FlatBuffers was built from.  The plain, undecorated tag name uses `gcc`.   "master" branches are tagged with YYYYMMDD of the image build dates.  Specific FlatBuffer releases are tagged with their version name.
+Images are availble in both `gcc` and `clang` variants, representing which toolchain was FlatBuffers was built from.  The plain, undecorated tag name uses `gcc`.   "master" branches are tagged with YYYYMMDD of the image build dates.  
+
+Specific FlatBuffers/`flatc` and `flatcc` releases are tagged with their version name.  The `flatc` version is prefixed with `v` and the `flatcc` version is prefixed with `cc`.
 
 - `gcc`, `latest`
 - `clang`
 - `gcc-v1.8.0`, `v1.8.0`
 - `clang-v1.8.0`
+- `gcc-v1.8.0-cc0.5.1`
 
 The builds are managed by [Travis-CI](https://travis-ci.org/neomantra/docker-openresty).
 
-For best stability, pin your images to the full tag, for example `neomantra/flatbuffers:gcc-v1.8.0`.
+For best stability, pin your images to the full tag, for example `neomantra/flatbuffers:gcc-v1.8.0-cc0.5.1`.
 
 
 Table of Contents

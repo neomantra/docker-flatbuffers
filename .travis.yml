@@ -15,8 +15,11 @@
 #
 # Releases should be tagged in git as:
 #   neomantra/flatbuffers:<flatbuffers-version>  (gcc)
+#   neomantra/flatbuffers:<flatbuffers-version>-<flaccc-version>  (gcc)
 #   neomantra/flatbuffers:gcc-<flatbuffers-version>
+#   neomantra/flatbuffers:gcc-<flatbuffers-version>-<flaccc-version>
 #   neomantra/flatbuffers:clang-<flatbuffers-version>
+#   neomantra/flatbuffers:gcc-<flatbuffers-version>-<flaccc-version>
 #
 
 sudo: required
@@ -44,13 +47,22 @@ jobs:
           docker push $DOCKER_ORG/flatbuffers:$YYYYMMDD ;
         fi
       - if [[ "$TRAVIS_TAG" ]] ; then
-          docker build -t flatbuffers-tag --build-arg FLATBUFFERS_ARCHIVE_TAG=$TRAVIS_TAG . ;
+          FLATC_VER=$( echo "$TRAVIS_TAG" | awk -F - '{print $1}') ;
+          FLATCC_VER=$(echo "$TRAVIS_TAG" | awk -F - '{print $2}' | sed 's/cc/v/') ;
+          FLATCC_TAG=$(echo "$TRAVIS_TAG" | awk -F - '{print $2}') ;
+          docker build -t flatbuffers-tag --build-arg FLATBUFFERS_ARCHIVE_TAG=$FLATC_VER --build-arg FLATCC_ARCHIVE_TAG=$FLATCC_VER . ;
           docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
-          docker tag flatbuffers-tag $DOCKER_ORG/flatbuffers:gcc-$TRAVIS_TAG &&
-          docker push $DOCKER_ORG/flatbuffers:gcc-$TRAVIS_TAG &&
+          docker tag flatbuffers-tag $DOCKER_ORG/flatbuffers:gcc-$FLATC_VER &&
+          docker push $DOCKER_ORG/flatbuffers:gcc-$FLATC_VER ;
           docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
-          docker tag flatbuffers-tag $DOCKER_ORG/flatbuffers:$TRAVIS_TAG &&
-          docker push $DOCKER_ORG/flatbuffers:$TRAVIS_TAG ;
+          docker tag flatbuffers-tag $DOCKER_ORG/flatbuffers:$FLATC_VER &&
+          docker push $DOCKER_ORG/flatbuffers:$FLATC_VER ;
+          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
+          docker tag flatbuffers-tag $DOCKER_ORG/flatbuffers:gcc-$FLATC_VER-$FLATCC_TAG &&
+          docker push $DOCKER_ORG/flatbuffers:gcc-$FLATC_VER-$FLATCC_TAG ;
+          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
+          docker tag flatbuffers-tag $DOCKER_ORG/flatbuffers:$FLATC_VER-$FLATCC_TAG &&
+          docker push $DOCKER_ORG/flatbuffers:$FLATC_VER-$FLATCC_TAG ;
         fi
 
     - stage: build docker image for clang flavor
@@ -66,8 +78,14 @@ jobs:
           docker push $DOCKER_ORG/flatbuffers:clang-$YYYYMMDD ;
         fi
       - if [[ "$TRAVIS_TAG" ]] ; then
-          docker build -t flatbuffers-clang-tag --build-arg FLATBUFFERS_ARCHIVE_TAG=$TRAVIS_TAG --build-arg FLATBUFFERS_USE_CLANG="true" . ;
+          FLATC_VER=$( echo "$TRAVIS_TAG" | awk -F - '{print $1}') ;
+          FLATCC_VER=$(echo "$TRAVIS_TAG" | awk -F - '{print $2}' | sed 's/cc/v/') ;
+          FLATCC_TAG=$(echo "$TRAVIS_TAG" | awk -F - '{print $2}') ;
+          docker build -t flatbuffers-clang-tag --build-arg FLATBUFFERS_USE_CLANG="true" --build-arg FLATBUFFERS_ARCHIVE_TAG=$FLATC_VER --build-arg FLATCC_ARCHIVE_TAG=$FLATCC_VER . ;
           docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
-          docker tag flatbuffers-clang-tag $DOCKER_ORG/flatbuffers:clang-$TRAVIS_TAG &&
-          docker push $DOCKER_ORG/flatbuffers:clang-$TRAVIS_TAG ;
+          docker tag flatbuffers-clang-tag $DOCKER_ORG/flatbuffers:clang-$FLATC_VER &&
+          docker push $DOCKER_ORG/flatbuffers:clang-$FLATC_VER ;
+          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
+          docker tag flatbuffers-clang-tag $DOCKER_ORG/flatbuffers:clang-$FLATC_VER-$FLATCC_TAG &&
+          docker push $DOCKER_ORG/flatbuffers:clang-$FLATC_VER-$FLATCC_TAG ;
         fi
