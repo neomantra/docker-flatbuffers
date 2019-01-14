@@ -5,7 +5,10 @@
 # FlatBuffer Build
 ###############################################################################
 
-FROM debian:stretch-slim as flatbuffer_build
+ARG FLATBUFFERS_IMAGE_BASE="debian"
+ARG FLATBUFFERS_IMAGE_TAG="stretch-slim"
+
+FROM ${FLATBUFFERS_IMAGE_BASE}:${FLATBUFFERS_IMAGE_TAG} as flatbuffer_build
 
 ARG FLATBUFFERS_ARCHIVE_BASE_URL="https://github.com/google/flatbuffers/archive"
 ARG FLATBUFFERS_ARCHIVE_TAG="master"
@@ -102,7 +105,7 @@ RUN curl -fSL "${FLATCC_ARCHIVE_BASE_URL}/${FLATCC_ARCHIVE_TAG}.tar.gz" -o flatc
 # Final Image Composition
 ###############################################################################
 
-FROM debian:stretch-slim
+FROM ${FLATBUFFERS_IMAGE_BASE}:${FLATBUFFERS_IMAGE_TAG}
 
 COPY --from=flatbuffer_build /usr/local/bin/flatc /usr/local/bin/flatc
 COPY --from=flatbuffer_build /usr/local/include/flatbuffers /usr/local/include/flatbuffers
@@ -121,6 +124,8 @@ ARG FLATCC_ARCHIVE_BASE_URL="https://github.com/dvidelabs/flatcc/archive/"
 ARG FLATCC_ARCHIVE_TAG="master"
 
 LABEL maintainer="Evan Wies <evan@neomantra.net>"
+LABEL FLATBUFFERS_IMAGE_BASE="${FLATBUFFERS_IMAGE_BASE}"
+LABEL FLATBUFFERS_IMAGE_TAG="${FLATBUFFERS_IMAGE_TAG}"
 LABEL FLATBUFFERS_USE_CLANG="${FLATBUFFERS_USE_CLANG}"
 LABEL FLATBUFFERS_ARCHIVE_BASE_URL="${FLATBUFFERS_ARCHIVE_BASE_URL}"
 LABEL FLATBUFFERS_ARCHIVE_TAG="${FLATBUFFERS_ARCHIVE_TAG}"
