@@ -17,12 +17,14 @@ ARG FLATBUFFERS_USE_CLANG="false"
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    	ca-certificates \
+        ca-certificates \
         cmake \
         curl \
         make \
-        $( if [ "${FLATBUFFERS_USE_CLANG}" = "true" ] ; then echo "clang" ; else echo "g++" ; fi) \
-	&& curl -fSL "${FLATBUFFERS_ARCHIVE_BASE_URL}/${FLATBUFFERS_ARCHIVE_TAG}.tar.gz" -o flatbuffers.tar.gz \
+        $( if [ "${FLATBUFFERS_USE_CLANG}" = "true" ] ; then echo "clang" ; else echo "g++" ; fi)
+
+
+RUN curl -fSL "${FLATBUFFERS_ARCHIVE_BASE_URL}/${FLATBUFFERS_ARCHIVE_TAG}.tar.gz" -o flatbuffers.tar.gz \
     && tar xzf flatbuffers.tar.gz \
     && cd flatbuffers-* \
     && env $( if [ "${FLATBUFFERS_USE_CLANG}" = "true" ] ; then echo "CC=/usr/bin/clang CXX=/usr/bin/clang++ " ; fi) \
