@@ -2,7 +2,7 @@
 #
 # Builds docker-flatbuffers images on Travis CI
 #
-# https://travis-ci.org/neomantra/docker-flatbuffers
+# https://travis-ci.com/neomantra/docker-flatbuffers
 #
 #
 # Master will build images with Docker tag:

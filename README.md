@@ -1,6 +1,6 @@
 # docker-flatbuffers - Docker tooling for Flatbuffers
 
-[![Build Status](https://travis-ci.org/neomantra/docker-flatbuffers.svg?branch=master)](https://travis-ci.org/neomantra/docker-flatbuffers)  [![](https://images.microbadger.com/badges/image/neomantra/flatbuffers.svg)](https://microbadger.com/#/images/neomantra/flatbuffers "microbadger.com")
+[![Build Status](https://travis-ci.com/neomantra/docker-flatbuffers.svg?branch=master)](https://travis-ci.com/neomantra/docker-flatbuffers)  [![](https://images.microbadger.com/badges/image/neomantra/flatbuffers.svg)](https://microbadger.com/#/images/neomantra/flatbuffers "microbadger.com")
 
 `docker-flatbuffers` is [Docker](https://www.docker.com) tooling for [FlatBuffers](https://google.github.io/flatbuffers/).  It also include C-language support using [`flatcc`](https://github.com/dvidelabs/flatcc).
 
@@ -24,7 +24,7 @@ Specific FlatBuffers/`flatc` and `flatcc` releases are tagged with their version
 - `clang-v1.8.0`
 - `gcc-v1.8.0-cc0.5.1`
 
-The builds are managed by [Travis-CI](https://travis-ci.org/neomantra/docker-openresty).
+The builds are managed by [Travis-CI](https://travis-ci.com/neomantra/docker-openresty).
 
 For best stability, pin your images to the full tag, for example `neomantra/flatbuffers:gcc-v1.8.0-cc0.5.1`.
 
@@ -151,13 +151,15 @@ Authors
 
 This tooling was created by Evan Wies and sponsored by [Neomantra](https://www.neomantra.com).
 
+Image build minutes are sponsored by [Travis CI](https://travis-ci.com/), allowing transparent production and distribution of this software.
+
 
 Copyright & License
 ===================
 
 This software is released under the [MIT License](https://en.wikipedia.org/wiki/MIT_License).
 
-Copyright (c) 2018, Neomantra BV and Evan Wies <evan@neomantra.net>
+Copyright (c) 2018-2021, Neomantra BV and Evan Wies <evan@neomantra.net>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
