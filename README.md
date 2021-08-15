@@ -137,7 +137,7 @@ The Docker image build can be customized using the following build arguments.  T
 | Arg | Default | Description |
 :----- | :-----: |:----------- |
 |FLATBUFFERS_IMAGE_BASE | debian | Docker image to use as a base image |
-|FLATBUFFERS_IMAGE_TAG | stretch-slim | Docker image tag to use as a base image |
+|FLATBUFFERS_IMAGE_TAG | bullseye-slim | Docker image tag to use as a base image |
 |FLATBUFFERS_ARCHIVE_BASE_URL | https://github.com/google/flatbuffers/archive | URL to download the flatbuffers archive from |
 |FLATBUFFERS_ARCHIVE_TAG | master | FlatBuffers tag to download |
 |FLATBUFFERS_BUILD_TYPE | Release | CMake build type (e.g. Release, Debug) |

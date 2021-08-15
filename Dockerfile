@@ -6,12 +6,12 @@
 ###############################################################################
 
 ARG FLATBUFFERS_IMAGE_BASE="debian"
-ARG FLATBUFFERS_IMAGE_TAG="stretch-slim"
+ARG FLATBUFFERS_IMAGE_TAG="bullseye-slim"
 
 FROM ${FLATBUFFERS_IMAGE_BASE}:${FLATBUFFERS_IMAGE_TAG} as flatbuffer_build
 
 ARG FLATBUFFERS_IMAGE_BASE="debian"
-ARG FLATBUFFERS_IMAGE_TAG="stretch-slim"
+ARG FLATBUFFERS_IMAGE_TAG="bullseye-slim"
 
 ARG FLATBUFFERS_ARCHIVE_BASE_URL="https://api.github.com/repos/google/flatbuffers/tarball"
 ARG FLATBUFFERS_REPO_TAG="master"
@@ -112,7 +112,7 @@ RUN curl -fSL "${FLATCC_ARCHIVE_BASE_URL}/${FLATCC_ARCHIVE_TAG}" -o flatcc.tar.g
 FROM ${FLATBUFFERS_IMAGE_BASE}:${FLATBUFFERS_IMAGE_TAG}
 
 ARG FLATBUFFERS_IMAGE_BASE="debian"
-ARG FLATBUFFERS_IMAGE_TAG="stretch-slim"
+ARG FLATBUFFERS_IMAGE_TAG="bullseye-slim"
 
 COPY --from=flatbuffer_build /usr/local/bin/flatc /usr/local/bin/flatc
 COPY --from=flatbuffer_build /usr/local/include/flatbuffers /usr/local/include/flatbuffers
