@@ -10,8 +10,11 @@ ARG FLATBUFFERS_IMAGE_TAG="stretch-slim"
 
 FROM ${FLATBUFFERS_IMAGE_BASE}:${FLATBUFFERS_IMAGE_TAG} as flatbuffer_build
 
-ARG FLATBUFFERS_ARCHIVE_BASE_URL="https://github.com/google/flatbuffers/archive/refs/tags"
-ARG FLATBUFFERS_ARCHIVE_TAG="master"
+ARG FLATBUFFERS_IMAGE_BASE="debian"
+ARG FLATBUFFERS_IMAGE_TAG="stretch-slim"
+
+ARG FLATBUFFERS_ARCHIVE_BASE_URL="https://api.github.com/repos/google/flatbuffers/tarball"
+ARG FLATBUFFERS_REPO_TAG="master"
 ARG FLATBUFFERS_BUILD_TYPE="Release"
 
 # Set to exactly "true" to use clang
@@ -27,9 +30,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
         $( if [ "${FLATBUFFERS_USE_CLANG}" = "true" ] ; then echo "clang" ; else echo "g++" ; fi)
 
 
-RUN curl -fSL "${FLATBUFFERS_ARCHIVE_BASE_URL}/${FLATBUFFERS_ARCHIVE_TAG}.tar.gz" -o flatbuffers.tar.gz \
+RUN curl -fSL "${FLATBUFFERS_ARCHIVE_BASE_URL}/${FLATBUFFERS_ARCHIVE_TAG}" -o flatbuffers.tar.gz \
     && tar xzf flatbuffers.tar.gz \
-    && cd flatbuffers-* \
+    && mv google-flatbuffers-* flatbuffers \
+    && cd flatbuffers \
     && env $( if [ "${FLATBUFFERS_USE_CLANG}" = "true" ] ; then echo "CC=/usr/bin/clang CXX=/usr/bin/clang++ " ; fi) \
            cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=${FLATBUFFERS_BUILD_TYPE} \
     && make \
@@ -76,12 +80,12 @@ RUN curl -fSL "${FLATBUFFERS_ARCHIVE_BASE_URL}/${FLATBUFFERS_ARCHIVE_TAG}.tar.gz
 
 # Same build environment as FlatBuffer
 
-ARG FLATCC_ARCHIVE_BASE_URL="https://github.com/dvidelabs/flatcc/archive/"
+ARG FLATCC_ARCHIVE_BASE_URL="https://api.github.com/repos/dvidelabs/flatcc/tarball/"
 ARG FLATCC_ARCHIVE_TAG="master"
 
-RUN curl -fSL "${FLATCC_ARCHIVE_BASE_URL}/${FLATCC_ARCHIVE_TAG}.tar.gz" -o flatcc.tar.gz \
+RUN curl -fSL "${FLATCC_ARCHIVE_BASE_URL}/${FLATCC_ARCHIVE_TAG}" -o flatcc.tar.gz \
     && tar xzf flatcc.tar.gz \
-    && mv flatcc-* flatcc \
+    && mv dvidelabs-flatcc-* flatcc \
     && cd flatcc \
     && env $( if [ "${FLATBUFFERS_USE_CLANG}" = "true" ] ; then echo "CC=/usr/bin/clang CXX=/usr/bin/clang++ " ; fi) \
         ./scripts/initbuild.sh make \
@@ -107,6 +111,9 @@ RUN curl -fSL "${FLATCC_ARCHIVE_BASE_URL}/${FLATCC_ARCHIVE_TAG}.tar.gz" -o flatc
 
 FROM ${FLATBUFFERS_IMAGE_BASE}:${FLATBUFFERS_IMAGE_TAG}
 
+ARG FLATBUFFERS_IMAGE_BASE="debian"
+ARG FLATBUFFERS_IMAGE_TAG="stretch-slim"
+
 COPY --from=flatbuffer_build /usr/local/bin/flatc /usr/local/bin/flatc
 COPY --from=flatbuffer_build /usr/local/include/flatbuffers /usr/local/include/flatbuffers
 COPY --from=flatbuffer_build /usr/local/lib/libflatbuffers.a /usr/local/lib/libflatbuffers.a
@@ -117,10 +124,10 @@ COPY --from=flatbuffer_build /flatcc/include/flatcc /usr/local/include/flatcc
 COPY --from=flatbuffer_build /flatcc/lib/*.a /usr/local/lib/
 
 ARG FLATBUFFERS_USE_CLANG="false"
-ARG FLATBUFFERS_ARCHIVE_BASE_URL="https://github.com/google/flatbuffers/archive"
+ARG FLATBUFFERS_ARCHIVE_BASE_URL="https://api.github.com/repos/google/flatbuffers/tarball"
 ARG FLATBUFFERS_ARCHIVE_TAG="master"
 ARG FLATBUFFERS_BUILD_TYPE="Release"
-ARG FLATCC_ARCHIVE_BASE_URL="https://github.com/dvidelabs/flatcc/archive/"
+ARG FLATCC_ARCHIVE_BASE_URL="https://api.github.com/repos/dvidelabs/flatcc/tarball/"
 ARG FLATCC_ARCHIVE_TAG="master"
 
 LABEL maintainer="Evan Wies <evan@neomantra.net>"
