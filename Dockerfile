@@ -80,7 +80,7 @@ RUN curl -fSL "${FLATBUFFERS_ARCHIVE_BASE_URL}/${FLATBUFFERS_ARCHIVE_TAG}" -o fl
 
 # Same build environment as FlatBuffer
 
-ARG FLATCC_ARCHIVE_BASE_URL="https://api.github.com/repos/dvidelabs/flatcc/tarball/"
+ARG FLATCC_ARCHIVE_BASE_URL="https://api.github.com/repos/dvidelabs/flatcc/tarball"
 ARG FLATCC_ARCHIVE_TAG="master"
 
 RUN curl -fSL "${FLATCC_ARCHIVE_BASE_URL}/${FLATCC_ARCHIVE_TAG}" -o flatcc.tar.gz \
@@ -127,7 +127,7 @@ ARG FLATBUFFERS_USE_CLANG="false"
 ARG FLATBUFFERS_ARCHIVE_BASE_URL="https://api.github.com/repos/google/flatbuffers/tarball"
 ARG FLATBUFFERS_ARCHIVE_TAG="master"
 ARG FLATBUFFERS_BUILD_TYPE="Release"
-ARG FLATCC_ARCHIVE_BASE_URL="https://api.github.com/repos/dvidelabs/flatcc/tarball/"
+ARG FLATCC_ARCHIVE_BASE_URL="https://api.github.com/repos/dvidelabs/flatcc/tarball"
 ARG FLATCC_ARCHIVE_TAG="master"
 
 LABEL maintainer="Evan Wies <evan@neomantra.net>"
