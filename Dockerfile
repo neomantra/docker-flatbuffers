@@ -14,7 +14,7 @@ ARG FLATBUFFERS_IMAGE_BASE="debian"
 ARG FLATBUFFERS_IMAGE_TAG="bullseye-slim"
 
 ARG FLATBUFFERS_ARCHIVE_BASE_URL="https://api.github.com/repos/google/flatbuffers/tarball"
-ARG FLATBUFFERS_REPO_TAG="master"
+ARG FLATBUFFERS_ARCHIVE_TAG="master"
 ARG FLATBUFFERS_BUILD_TYPE="Release"
 
 # Set to exactly "true" to use clang
